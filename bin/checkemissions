@@ -5,6 +5,7 @@ function integration() {
   scheduledJob.sayHelloInEnglish();
   scheduledJob.integration().then(result => {
     console.log(">>>>checkemissions",result);
+    process.exit();
   })
 }
 integration();
