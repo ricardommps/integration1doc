@@ -288,26 +288,29 @@ module.exports = {
       console.log("HELLO SERVER")
     },
     integration: function(){
-        const client = new Client({
-            connectionString: connectionString,
-        });
-        client.on('errorOn', error => {
-            console.log(">>ERROR CLIENT ON",errorOn)
-        });
-        client.connect((errconnect, client) => {
-            if(errconnect) {
-               console.log(">>> ERROR CONNECT",errconnect)
-            }
-            var sql="INSERT INTO schedule(date,hour) VALUES ($1,$2)";
-            const query = client.query(sql,
-                [new Date(),moment(new Date()).format("HH:mm:ss")],
-                function (err, result) {
-                if(err || result.rowCount == 0) {
-                   console.log(">>>ERROR",err);
-                }else{
-                    console.log(">>>SUCCESS",result);
-                }
+        console.log(">>>SERVER integration")
+        return new Promise((resolve, reject) => {
+            const client = new Client({
+                connectionString: connectionString,
             });
-        });
+            client.on('errorOn', error => {
+                console.log(">>ERROR CLIENT ON",errorOn)
+            });
+            client.connect((errconnect, client) => {
+                if(errconnect) {
+                console.log(">>> ERROR CONNECT",errconnect)
+                }
+                var sql="INSERT INTO schedule(date,hour) VALUES ($1,$2)";
+                const query = client.query(sql,
+                    [new Date(),moment(new Date()).format("HH:mm:ss")],
+                    function (err, result) {
+                    if(err || result.rowCount == 0) {
+                    console.log(">>>ERROR",err);
+                    }else{
+                        console.log(">>>SUCCESS",result);
+                    }
+                });
+            });
+        })
     }
   };
