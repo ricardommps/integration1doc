@@ -2,7 +2,7 @@
 const scheduledJob = require("../server");
 function sayHello() {
   console.log('Hello');
-  server.sayHelloInEnglish();
+  scheduledJob.sayHelloInEnglish();
 }
 sayHello();
 process.exit();
