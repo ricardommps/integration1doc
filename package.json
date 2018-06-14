@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "scheduled": "set NODE_ENV=scheduled & node scheduled-job.js"
   },
   "keywords": [
     "Express",

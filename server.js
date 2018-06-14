@@ -6,6 +6,7 @@ const async = require('async');
 const app = express();
 const logger = require('morgan');
 const moment = require('moment'); 
+const scheduledJob = require("./scheduled-job");
 
 const { Client } = require('pg');
 const connectionString = 'postgres://postgres:Softcityplan2018@innovacity.cessmvb4skx1.sa-east-1.rds.amazonaws.com:5432/postgres'
@@ -25,7 +26,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/schedule', (req, res) => {
-    const client = new Client({
+
+    res.status(200).send(scheduledJob.secheduled());
+
+    /* const client = new Client({
         connectionString: connectionString,
     });
     client.on('errorOn', error => {
@@ -47,7 +51,7 @@ app.get('/schedule', (req, res) => {
                 res.status(200).json(result);
             }
         });
-    });
+    }); */
 });
 
 app.post('/insereEmissao', (req, res) => {
