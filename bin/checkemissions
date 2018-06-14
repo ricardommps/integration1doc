@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-
+const scheduledJob = require("../server");
 function sayHello() {
   console.log('Hello');
+  server.sayHelloInEnglish();
 }
 sayHello();
 process.exit();

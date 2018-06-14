@@ -6,8 +6,6 @@ const async = require('async');
 const app = express();
 const logger = require('morgan');
 const moment = require('moment'); 
-const scheduledJob = require("./scheduled-job");
-
 const { Client } = require('pg');
 const connectionString = 'postgres://postgres:Softcityplan2018@innovacity.cessmvb4skx1.sa-east-1.rds.amazonaws.com:5432/postgres'
 var client_auth = "975EAD79";
@@ -27,7 +25,7 @@ app.get('/', (req, res) => {
 
 app.get('/schedule', (req, res) => {
 
-    res.status(200).send(scheduledJob.secheduled());
+   // res.status(200).send(scheduledJob.secheduled());
 
     /* const client = new Client({
         connectionString: connectionString,
@@ -284,3 +282,9 @@ function oneDoc(content) {
         });
       })
 }
+
+module.exports = {
+    sayHelloInEnglish: function() {
+      console.log("HELLO SERVER")
+    }
+  };
