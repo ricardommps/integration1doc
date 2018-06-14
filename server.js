@@ -283,6 +283,91 @@ function oneDoc(content) {
       })
 }
 
+function checkEmissions(dateFilter){
+    return new Promise((resolve, reject) => {
+        var emissoes = [];
+        var emissionsSaveDb = [];
+        var currentPage = 1,
+        lastPage = 3;
+        var content = {
+            "method": "listEmissions",
+            "emissao": {
+                "grupo": "3",
+                "id_documento": "4",
+            },
+            num_pagina:currentPage
+        };
+        if(dateFilter){
+            content.emissao.data_de = dateFilter.data_de;
+            content.emissao.data_ate = dateFilter.data_ate;
+        }
+        async.whilst(function () {
+            return currentPage <= lastPage;
+        },
+        function (next) {
+            oneDoc(content).then(result => {
+                var listEmissionsResJson = JSON.parse(result);
+                if(listEmissionsResJson.total <= 0 || !listEmissionsResJson.emissoes){
+                    return reject(err)
+                }
+                //lastPage = listEmissionsResJson.total /30;
+                listEmissionsResJson.emissoes.forEach(function(item){
+                    emissoes.push(item);
+                });
+                currentPage++;
+                content.num_pagina = currentPage;
+                next();
+              })
+        },
+        function (err, n) {
+            if(err){
+                return reject(err)
+            }else{
+                async.map(emissoes,teste, function(err,resultsMap){
+                    var resultConsultarDoc = resultsMap;
+                    async.forEach(resultConsultarDoc, function (item) {
+                        if(item.numero_atendimento){
+                            emissionsSaveDb.push(item)
+                        }
+                    })
+                   const client = new Client({
+                        connectionString: connectionString,
+                    });
+                    client.on('errorOn', error => {
+                        console.log("ERROR",errorOn)
+                        return reject(errorOn)
+                    });
+                    client.connect((errconnect, client) => {
+                        if(err) {
+                           console.log(">>>",errconnect)
+                           return reject(errconnect)
+                        }
+                    });
+                    const query = client.query(
+                        buildStatement('INSERT INTO ocorrencias (endereco, position, data_abertura, origem, tipo, nome_solicitante, descricao, status_id, anexos, usuario_fiscal_id, numero_atendimento, numero_documento_solicitante, lida, hash_pai) VALUES ', emissionsSaveDb),
+                        function (errorquery, result) {
+                            if(errorquery || result.rowCount == 0) {
+                                client.end()
+                                return reject(errorquery)
+                            }else{
+                                //client.end()
+                                sql="INSERT INTO schedule(date) VALUES ($1)"
+                                client.query(sql,
+                                    [new Date()], function (errInsert, resultUpdate) {
+                                        if (errInsert) {
+                                            return reject(errInsert)
+                                        } else {
+                                            return resolve(resultUpdate)
+                                        }
+                                    });
+                            }
+                        });
+                })
+            }
+        });
+    });
+}
+
 module.exports = {
     sayHelloInEnglish: function() {
       console.log("HELLO SERVER")
@@ -295,18 +380,44 @@ module.exports = {
             });
             client.on('errorOn', error => {
                 console.log(">>ERROR CLIENT ON",errorOn)
+                return reject(errorOn)
             });
             client.connect((errconnect, client) => {
                 if(errconnect) {
-                console.log(">>> ERROR CONNECT",errconnect)
+                    console.log(">>> ERROR CONNECT",errconnect)
+                    return reject(errconnect)
                 }
-                var sql="INSERT INTO schedule(date,hour) VALUES ($1,$2)";
+                //var sql="INSERT INTO schedule(date,hour) VALUES ($1,$2)";
+                var sql="select * from ocorrencias ORDER  BY data_abertura DESC LIMIT 1"
                 const query = client.query(sql,
                     [new Date(),moment(new Date()).format("HH:mm:ss")],
                     function (err, result) {
-                    if(err || result.rowCount == 0) {
-                    console.log(">>>ERROR",err);
+                    if(err) {
+                        console.log(">>>ERROR",err);
+                        return reject(errconnect)
                     }else{
+                        if(result.rowCount > 0){
+                            var resultRows =  result.rows;
+                            var dateFilter = {
+                                data_de: moment(resultRows[0].data_abertura).format('YYYY/MM/DD'),
+                                data_ate:moment(new Date()).format('YYYY/MM/DD')
+                            }
+                            checkEmissions(dateFilter).then(result => {
+                                console.log(">>>Resolve",result)
+                                return resolve(result)
+                            }).catch(errCheck =>{
+                                console.log(">>>errCheck",errCheck)
+                                return reject(errCheck)
+                            })
+                        }else{
+                            checkEmissions(null).then(result => {
+                                console.log(">>>Resolve",result)
+                                return resolve(result)
+                            }).catch(errCheck =>{
+                                console.log(">>>errCheck",errCheck)
+                                return reject(errCheck)
+                            })
+                        }
                         console.log(">>>SUCCESS",result);
                     }
                 });

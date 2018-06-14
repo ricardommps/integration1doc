@@ -6,6 +6,6 @@ function integration() {
   scheduledJob.integration().then(result => {
     console.log(">>>>checkemissions",result);
     process.exit();
-  })
+  });
 }
 integration();
