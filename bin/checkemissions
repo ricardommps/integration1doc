@@ -2,7 +2,6 @@
 const scheduledJob = require("../server");
 function integration() {
   console.log('Hello');
-  scheduledJob.sayHelloInEnglish();
   scheduledJob.integration().then(result => {
     console.log(">>>>checkemissions",result);
     process.exit();
