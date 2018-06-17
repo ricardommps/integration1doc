@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+const scheduledJob = require("../server");
+function geraOcorrencia() {
+  scheduledJob.geraOcorrencia().then(result => {
+    console.log(">>>>geraOcorrencia",result);
+    process.exit();
+  });
+}
+geraOcorrencia();

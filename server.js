@@ -335,5 +335,6 @@ function buildStatement (insert, rows) {
   }
 
   module.exports = {
-    integration
+    integration,
+    geraOcorrencia
   }
