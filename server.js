@@ -328,7 +328,7 @@ function buildStatement (insert, rows) {
             }
         }
         oneDoc(content).then(result => {
-            var query = "INSERT INTO scheduleEmissions(date,hour) VALUES ($1,$2)"
+            var query = "INSERT INTO schedule(date,hour) VALUES ($1,$2)"
             db.query(query,[new Date(),moment(new Date()).format("HH:mm:ss")],
             (errQuery,resultQuery) => {
                 if(errQuery){
