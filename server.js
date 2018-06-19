@@ -114,7 +114,10 @@ function oneDoc(content) {
                 console.log(">>>error:",error)
                 return reject(error)
             }else{
-                console.log(">>>1DocResult",body)
+                console.log("<<<<<<---->>>>>>>")
+                console.log(">>>1DocResult NUMERO",body.emissao.num_formatado)
+                console.log(">>>1DocResult ASSUNTO",body.emissao.id_assunto)
+                console.log("<<<<<<---->>>>>>>")
                 return resolve(body)
             }
         });
