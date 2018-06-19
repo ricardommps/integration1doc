@@ -115,7 +115,7 @@ function oneDoc(content) {
                 return reject(error)
             }else{
                 console.log("<<<<<<---->>>>>>>")
-                console.log(">>>1DocResult NUMERO",body.emissao.num)
+                console.log(">>>1DocResult NUMERO",body.emissao)
                 console.log(">>>1DocResult ASSUNTO",body.emissao.id_assunto)
                 console.log("<<<<<<---->>>>>>>")
                 return resolve(body)
