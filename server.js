@@ -24,6 +24,14 @@ app.get('/', (req, res) => {
     res.status(200).send('Innovacity Push');
 });
 
+app.post('/listEmissions', (req, res) => {
+    listEmissions(req.body.page).then(result => {
+        res.status(200).send(result);
+    })
+});
+
+
+
 app.get('/geraOcorrencia', (req, res) => {
     geraOcorrencia().then(result => {
         res.status(200).send(result);
@@ -53,6 +61,35 @@ app.get('/testeQuery', (req, res) => {
 app.listen(port, () => {
     console.log("Server is listening on port"+port);
 });
+
+function listEmissions(page){
+    return new Promise((resolve, reject) => {
+        var content = {
+            "method": "listEmissions",
+            "emissao": {
+                "grupo": "3",
+                "id_documento": "4"
+            },
+            num_pagina:page
+        };
+        var encoded = new Buffer(JSON.stringify(listEmissionsData)).toString('base64');
+        var options = { method: 'POST',
+        url: 'https://api.1doc.com.br/',
+        headers:
+            { 'Content-Type': 'application/x-www-form-urlencoded',
+                'Cache-Control': 'no-cache' },
+        form: { data: encoded } };
+        request(options, function (error, response, body) {
+            if (error){
+                console.log(">>>error:",error)
+                return reject(error)
+            }else{
+                var resultBody = JSON.parse(body);
+                return resolve(body)
+            }
+        });
+    })
+}
 
 function integration(){
     return new Promise((resolve, reject) => {
@@ -106,8 +143,7 @@ function oneDoc(content) {
             url: 'https://api.1doc.com.br/',
             headers:
                 { 'Content-Type': 'application/x-www-form-urlencoded',
-                    'Cache-Control': 'no-cache',
-                    'Content-Typ': 'application/x-www-form-urlencoded' },
+                    'Cache-Control': 'no-cache' },
             form: { data: encoded } };
         request(options, function (error, response, body) {
             if (error){
@@ -115,10 +151,6 @@ function oneDoc(content) {
                 return reject(error)
             }else{
                 var resultBody = JSON.parse(body);
-                console.log("<<<<<<---->>>>>>>")
-                console.log(">>>1DocResult NUMERO",resultBody)
-                //console.log(">>>1DocResult ASSUNTO",resultBody.emissao.id_assunto)
-                console.log("<<<<<<---->>>>>>>")
                 return resolve(body)
             }
         });
