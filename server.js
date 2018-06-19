@@ -67,11 +67,14 @@ function listEmissions(page){
     return new Promise((resolve, reject) => {
         var content = {
             "method": "listEmissions",
+            "client_auth": client_auth,
+            "token": token,
+            "secret": secret,
             "emissao": {
                 "grupo": "3",
                 "id_documento": "4"
             },
-            num_pagina:page
+            "num_pagina":page
         };
         var encoded = new Buffer(JSON.stringify(content)).toString('base64');
         var options = { method: 'POST',
