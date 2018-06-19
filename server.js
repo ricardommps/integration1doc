@@ -155,7 +155,6 @@ function oneDoc(content) {
                 console.log(">>>error:",error)
                 return reject(error)
             }else{
-                var resultBody = JSON.parse(body);
                 return resolve(body)
             }
         });
