@@ -25,6 +25,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/listEmissions', (req, res) => {
+    console.log(">>>POST",req.body.page);
     listEmissions(req.body.page).then(result => {
         res.status(200).send(result);
     })
@@ -79,6 +80,7 @@ function listEmissions(page){
             { 'Content-Type': 'application/x-www-form-urlencoded',
                 'Cache-Control': 'no-cache' },
         form: { data: encoded } };
+        console.log(">>>",options);
         request(options, function (error, response, body) {
             if (error){
                 console.log(">>>error:",error)
