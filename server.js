@@ -207,6 +207,7 @@ function findAttachments(data,callback){
       });
 }
 function checkEmissions(dateFilter){
+    console.log(">>checkEmissions")
     return new Promise((resolve, reject) => {
         var assuntos = [18,19,20,21,22,99,23,24,30,122,32,33,72,45,47,48,49,121,50,15,17,86,92,43,42,114,144,266,265];
         var emissoes = [];
@@ -238,10 +239,12 @@ function checkEmissions(dateFilter){
                     emissoes.push(item);
                 });
                 currentPage++;
+                console.log(">>currentPage",currentPage)
                 content.num_pagina = currentPage;
                 next();
               })
         },function(err, n) {
+            console.log(">>NEXT")
             async.map(emissoes,findAttachments, function(err,resultsAsync) {
                 var resultConsultarDoc = resultsAsync;
                 async.forEach(resultConsultarDoc, function (item) {
@@ -249,13 +252,16 @@ function checkEmissions(dateFilter){
                         emissionsSaveDb.push(item)
                     }
                 })
+                console.log(">>QUERY")
                 db.query(
                     buildStatement('INSERT INTO ocorrencias (endereco, position, data_abertura, origem, tipo, nome_solicitante, descricao, status_id, anexos, usuario_fiscal_id, numero_atendimento, numero_documento_solicitante, lida, hash_pai) VALUES ', emissionsSaveDb),
                 (errQuery,resultQuery) => {
                     if(errQuery){
+                        console.log(">>errQuery",errQuery)
                         return reject(errQuery)
                     }
                     if(resultQuery.rowCount > 0){
+                    console.log(">>resultQuery",resultQuery.rowCount)
                      var querySchedule = "INSERT INTO schedule(date,hour) VALUES ($1,$2)"
                      db.query(querySchedule,
                         [new Date(),moment(new Date()).format("HH:mm:ss")],
