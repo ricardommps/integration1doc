@@ -116,7 +116,7 @@ function oneDoc(content) {
             }else{
                 var resultBody = JSON.parse(body);
                 console.log("<<<<<<---->>>>>>>")
-                console.log(">>>1DocResult NUMERO",resultBody.emissao)
+                console.log(">>>1DocResult NUMERO",resultBody)
                 //console.log(">>>1DocResult ASSUNTO",resultBody.emissao.id_assunto)
                 console.log("<<<<<<---->>>>>>>")
                 return resolve(body)
