@@ -73,7 +73,7 @@ function listEmissions(page){
             },
             num_pagina:page
         };
-        var encoded = new Buffer(JSON.stringify(listEmissionsData)).toString('base64');
+        var encoded = new Buffer(JSON.stringify(content)).toString('base64');
         var options = { method: 'POST',
         url: 'https://api.1doc.com.br/',
         headers:
