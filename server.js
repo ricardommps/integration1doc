@@ -176,8 +176,7 @@ function checkEmissions(dateFilter){
             "method": "listEmissions",
             "emissao": {
                 "grupo": "3",
-                "id_documento": "4",
-                "id_assunto": assuntos
+                "id_documento": "4"
             },
             num_pagina:currentPage
         };
