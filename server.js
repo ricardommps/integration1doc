@@ -114,7 +114,7 @@ function oneDoc(content) {
                 console.log(">>>error:",error)
                 return reject(error)
             }else{
-                //console.log(">>>",body)
+                console.log(">>>1DocResult",body)
                 return resolve(body)
             }
         });
@@ -167,6 +167,7 @@ function findAttachments(data,callback){
 }
 function checkEmissions(dateFilter){
     return new Promise((resolve, reject) => {
+        var assuntos = [18,19,20,21,22,99,23,24,30,122,32,33,72,45,47,48,49,121,50,15,17,86,92,43,42,114,144];
         var emissoes = [];
         var emissionsSaveDb = [];
         var currentPage = 1,
@@ -176,6 +177,7 @@ function checkEmissions(dateFilter){
             "emissao": {
                 "grupo": "3",
                 "id_documento": "4",
+                "id_assunto": assuntos
             },
             num_pagina:currentPage
         };
