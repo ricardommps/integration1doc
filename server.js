@@ -27,15 +27,8 @@ app.get('/', (req, res) => {
 app.post('/listEmissions', (req, res) => {
     console.log(">>>POST",req.body.page);
     listEmissions(req.body.page).then(result => {
-        res.status(200).send(result);
-    })
-});
-
-
-
-app.get('/geraOcorrencia', (req, res) => {
-    geraOcorrencia().then(result => {
-        res.status(200).send(result);
+        var jsonResult = JSON.parse(result);
+        res.status(200).send(jsonResult);
     })
 });
 
@@ -178,9 +171,9 @@ function findAttachments(data,callback){
             position: (data.latitude && data.longitude) ? `${data.latitude},${data.longitude}` : null,
             data_abertura: data.data,
             origem: data.origem,
-            tipo:data.assunto_txt,
+            id_ref:id_assunto,
             nome_solicitante:data.origem_pessoa,
-            descricao:data.resumo,
+            descricao: new Buffer(data.conteudo, 'base64'),
             status_id:1,
             anexos:null,
             usuario_fiscal_id:null,
@@ -253,7 +246,7 @@ function checkEmissions(dateFilter){
                 })
                 console.log(">>QUERY")
                 db.query(
-                    buildStatement('INSERT INTO ocorrencias (endereco, position, data_abertura, origem, tipo, nome_solicitante, descricao, status_id, anexos, usuario_fiscal_id, numero_atendimento, numero_documento_solicitante, lida, hash_pai) VALUES ', emissionsSaveDb),
+                    buildStatement('INSERT INTO ocorrencias (endereco, position, data_abertura, origem, id_ref, nome_solicitante, descricao, status_id, anexos, usuario_fiscal_id, numero_atendimento, numero_documento_solicitante, lida, hash_pai) VALUES ', emissionsSaveDb),
                 (errQuery,resultQuery) => {
                     if(errQuery){
                         console.log(">>errQuery",errQuery)

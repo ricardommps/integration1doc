@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 const scheduledJob = require("../server");
 function integration() {
-  console.log('Hello');
   scheduledJob.integration().then(result => {
     console.log(">>>>checkemissions",result);
     process.exit();
+  }).catch(e => {
+    console.log(e)
   });
 }
 integration();
